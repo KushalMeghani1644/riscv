@@ -1,0 +1,41 @@
+name: QEMU CI
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  qemu-tests:
+    name: Run QEMU-based RISC-V Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toolchain: [stable, nightly]
+        include:
+          - toolchain: nightly
+            experimental: true
+    continue-on-error: ${{ matrix.experimental || false }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.toolchain }}
+          components: rust-src
+      - name: Install QEMU
+        run: sudo apt-get update && sudo apt-get install -y qemu qemu-system-misc
+      - name: Install Cargo dependencies
+        run: cargo fetch
+      - name: Run QEMU RISC-V tests
+        run: |
+          cargo build --tests
+          for test_bin in target/riscv32imac-unknown-none-elf/debug/*; do
+            if [[ -x "$test_bin" ]]; then
+              echo "Running $test_bin in QEMU..."
+              qemu-system-riscv32 -nographic -machine sifive_u -kernel "$test_bin"
+            fi
+          done
+      - name: Rustfmt check
+        run: cargo fmt --all -- --check
+      - name: Clippy lint
+        run: cargo clippy --all --all-features -- -D warnings
+
