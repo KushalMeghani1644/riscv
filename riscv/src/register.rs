@@ -62,6 +62,7 @@ pub mod senvcfg;
 pub mod sepc;
 pub mod sip;
 pub mod sscratch;
+pub mod stopi;
 pub mod stval;
 pub mod vstopi;
 

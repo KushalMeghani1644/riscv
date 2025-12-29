@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+- Add `stopi` CSR
+
 ## v0.16.0 - 2025-12-19
 
 ### Added
