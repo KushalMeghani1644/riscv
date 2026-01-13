@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## v0.17.1 - 2026-01-13
+
+### Fixed
+
+- Fix `build.rs` so `ARCH_WIDTH` is passed to linker script in size of bytes (instead of bits)
+
 ## v0.17.0 - 2025-12-19
 
 ### Added
