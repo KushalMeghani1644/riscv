@@ -56,7 +56,8 @@ fn main() {
     let cargo_flags = env::var("CARGO_ENCODED_RUSTFLAGS").unwrap();
 
     if let Ok(target) = RiscvTarget::build(&target, &cargo_flags) {
-        let width = target.width();
+        // Linker script expects ARCH_WIDTH in bytes
+        let width_bytes = u32::from(target.width()) / 8;
 
         // set environment variable RISCV_RT_BASE_ISA to the base ISA of the target.
         println!(
@@ -86,6 +87,6 @@ fn main() {
                 println!("cargo:rustc-cfg={flag}");
             }
         }
-        add_linker_script(width.into()).unwrap();
+        add_linker_script(width_bytes).unwrap();
     }
 }
